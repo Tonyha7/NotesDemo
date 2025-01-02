@@ -24,7 +24,7 @@ interface NoteApi {
     fun deleteNote(@Query("id") id: Int): Call<ApiResponse<Boolean>>
 
     companion object {
-        private const val BASE_URL = "http://192.168.137.59:8080/"
+        private const val BASE_URL = "http://192.168.31.31:8080/"
 
         fun create(): NoteApi {
             val retrofit = Retrofit.Builder()

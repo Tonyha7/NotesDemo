@@ -1,11 +1,16 @@
 package com.th7.notesdemo
 
 import android.content.Context
+import android.text.Html
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.th7.notesdemo.databinding.ItemNoteBinding
+import org.commonmark.node.Node
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
 
 class NoteAdapter(
     private val context: Context,
@@ -24,7 +29,15 @@ class NoteAdapter(
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notes[position]
         holder.binding.titleTextView.text = note.title
-        holder.binding.contentTextView.text = note.content
+        //holder.binding.contentTextView.text = note.content
+        val parser = Parser.builder().build()
+        val document: Node = parser.parse(note.content)
+        val renderer = HtmlRenderer.builder().build()
+        val html: String = renderer.render(document)
+        val spanned: Spanned =
+            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
+        holder.binding.contentTextView.text = spanned
+
         holder.binding.authorTextView.text = note.author
 
         if (!note.image.isNullOrEmpty()) {

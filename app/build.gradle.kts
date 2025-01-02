@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+// https://mvnrepository.com/artifact/org.commonmark/commonmark
+    implementation(libs.commonmark)
 
     implementation(libs.androidx.core.ktx.v190)
     implementation(libs.androidx.appcompat)
