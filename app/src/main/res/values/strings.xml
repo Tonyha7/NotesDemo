@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NotesDemo</string>
+    <string name="note_title">标题</string>
+    <string name="note_content">内容</string>
+    <string name="note_author">作者</string>
+    <string name="note_ImgURL">图片URL</string>
+    <string name="save">保存</string>
+</resources>
