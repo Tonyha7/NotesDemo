@@ -1,5 +1,6 @@
 package com.th7.notesdemo
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Html
 import android.text.Spanned
@@ -56,6 +57,7 @@ class NoteAdapter(
 
     override fun getItemCount(): Int = notes.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateNotes(newNotes: List<Note>) {
         notes.clear()
         notes.addAll(newNotes)

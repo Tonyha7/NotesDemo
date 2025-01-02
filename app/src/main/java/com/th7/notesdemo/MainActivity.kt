@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var noteAdapter: NoteAdapter
-    private val EDIT_NOTE_REQUEST = 1
+    private val NOTE_REQUEST = 1
     private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.addNoteButton.setOnClickListener {
             val intent = Intent(this, NoteEditActivity::class.java)
-            startActivityForResult(intent, EDIT_NOTE_REQUEST)
+            startActivityForResult(intent, NOTE_REQUEST)
         }
     }
 
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, NoteEditActivity::class.java)
         val noteJson = gson.toJson(note)
         intent.putExtra("note", noteJson)
-        startActivityForResult(intent, EDIT_NOTE_REQUEST)
+        startActivityForResult(intent, NOTE_REQUEST)
     }
 
     private fun deleteNote(note: Note) {
@@ -115,9 +115,10 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == EDIT_NOTE_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == NOTE_REQUEST && resultCode == Activity.RESULT_OK) {
             fetchNotes()
         }
     }
