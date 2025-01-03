@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.th7.notesdemo.databinding.ActivityMainBinding
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var noteAdapter: NoteAdapter
     private val NOTE_REQUEST = 1
     private val gson = Gson()
+    private var allNotes: List<Note> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, NoteEditActivity::class.java)
             startActivityForResult(intent, NOTE_REQUEST)
         }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterNotes(newText)
+                return true
+            }
+        })
     }
 
     private fun setupRecyclerView() {
@@ -55,7 +68,8 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val notes = response.body()?.data
                     notes?.let {
-                        noteAdapter.updateNotes(it)
+                        allNotes = it
+                        updateNoteList(it)
                     }
                 } else {
                     Log.e("MainActivity", "Failed to fetch notes: ${response.errorBody()?.string()}")
@@ -66,6 +80,21 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Error fetching notes", t)
             }
         })
+    }
+
+    private fun filterNotes(query: String?) {
+        val filteredNotes = if (query.isNullOrEmpty()) {
+            allNotes
+        } else {
+            allNotes.filter { note ->
+                note.title.contains(query, ignoreCase = true)
+            }
+        }
+        updateNoteList(filteredNotes)
+    }
+
+    private fun updateNoteList(notes: List<Note>) {
+        noteAdapter.updateNotes(notes)
     }
 
     private fun showNoteOptions(note: Note) {
@@ -115,7 +144,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == NOTE_REQUEST && resultCode == Activity.RESULT_OK) {
